@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /spreadsheets/{spreadsheetId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && request.auth.uid == resource.data.adminUid;
+    }
+    match /activities/{activityId} {
+      allow read, write: if true; // Open to allow unauthenticated users with the link to update.
+    }
+  }
+}

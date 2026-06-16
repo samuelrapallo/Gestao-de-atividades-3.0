@@ -1,0 +1,7 @@
+{
+  "name": "Gestao de Atividades",
+  "description": "Aplicativo para gerenciar planilhas executivas e atividades com colaboracao em tempo real.",
+  "requestFramePermissions": ["microphone", "camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
