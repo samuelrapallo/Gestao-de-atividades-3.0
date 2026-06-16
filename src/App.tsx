@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSpreadsheet, uploadSpreadsheet, deleteSpreadsheet } from './lib/data';
-import { auth, loginWithGoogle, logout, db } from './lib/firebase';
+import { auth, loginAnonymously, logout, db } from './lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { Dashboard } from './components/Dashboard';
 import { FileDown, UploadCloud, LogIn, LogOut, Copy, Trash2, ArrowLeft } from 'lucide-react';
@@ -129,22 +129,24 @@ export default function App() {
              <div className="mb-6 bg-indigo-50 w-20 h-20 flex items-center justify-center mx-auto rounded-xl text-indigo-600">
                <FileDown className="w-10 h-10" />
              </div>
-             <h3 className="text-lg font-semibold text-slate-800 mb-2">Área do Administrador</h3>
-             <p className="text-sm text-slate-500 mb-6">Faça login para fazer upload de planilhas e gerenciar seus documentos.</p>
+             <h3 className="text-lg font-semibold text-slate-800 mb-2">Acesso Rápido</h3>
+             <p className="text-sm text-slate-500 mb-6">Acesse sem necessidade de contas para gerenciar suas planilhas.</p>
              <button 
-               onClick={loginWithGoogle}
+               onClick={loginAnonymously}
                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
              >
-               <LogIn className="w-5 h-5 mr-2" /> Entrar com Google
+               <LogIn className="w-5 h-5 mr-2" /> Entrar como Convidado
              </button>
           </div>
         ) : (
           <div className="bg-white py-6 px-6 shadow-sm rounded-2xl border border-slate-200 flex flex-col gap-6">
              <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                <div className="flex items-center gap-3">
-                 <img src={user.photoURL} alt="Avatar" className="w-10 h-10 rounded-full bg-slate-300" />
+                 <div className="w-10 h-10 rounded-full bg-slate-300 flex items-center justify-center text-slate-600 font-bold">
+                   {user.isAnonymous ? 'G' : (user.displayName?.[0] || 'U')}
+                 </div>
                  <div className="flex flex-col">
-                   <span className="text-sm font-semibold text-slate-700 leading-tight truncate">{user.displayName}</span>
+                   <span className="text-sm font-semibold text-slate-700 leading-tight truncate">{user.isAnonymous ? 'Convidado' : user.displayName || 'Usuário'}</span>
                    <span className="text-[10px] text-green-600 flex items-center gap-1 mt-0.5"><span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Sincronizado</span>
                  </div>
                </div>

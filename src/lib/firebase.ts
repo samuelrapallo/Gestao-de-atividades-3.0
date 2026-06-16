@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, signInAnonymously } from 'firebase/auth';
 import aiStudioConfig from '../../firebase-applet-config.json';
 
 const customConfig = {
@@ -21,4 +21,5 @@ export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
 export const loginWithGoogle = () => signInWithPopup(auth, googleProvider);
+export const loginAnonymously = () => signInAnonymously(auth);
 export const logout = () => signOut(auth);
