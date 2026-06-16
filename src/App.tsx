@@ -18,7 +18,8 @@ export default function App() {
   const [userSheets, setUserSheets] = useState<Spreadsheet[]>([]);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, u => {
+    let syncing = false;
+    const unsub = onAuthStateChanged(auth, async u => {
       setUser(u);
       if (u) {
         const q = query(collection(db, 'spreadsheets'), where('adminUid', '==', u.uid));
@@ -28,6 +29,15 @@ export default function App() {
         });
       } else {
         setUserSheets([]);
+        if (!syncing) {
+            syncing = true;
+            try {
+               await loginAnonymously();
+            } catch (err) {
+               console.error("Anonymous login error", err);
+            }
+            syncing = false;
+        }
       }
     });
     return unsub;
@@ -125,18 +135,9 @@ export default function App() {
         </div>
 
         {!user ? (
-          <div className="bg-white py-8 px-6 shadow-sm rounded-2xl border border-slate-200 text-center">
-             <div className="mb-6 bg-indigo-50 w-20 h-20 flex items-center justify-center mx-auto rounded-xl text-indigo-600">
-               <FileDown className="w-10 h-10" />
-             </div>
-             <h3 className="text-lg font-semibold text-slate-800 mb-2">Acesso Rápido</h3>
-             <p className="text-sm text-slate-500 mb-6">Acesse sem necessidade de contas para gerenciar suas planilhas.</p>
-             <button 
-               onClick={loginAnonymously}
-               className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
-             >
-               <LogIn className="w-5 h-5 mr-2" /> Entrar como Convidado
-             </button>
+          <div className="bg-white py-12 px-6 shadow-sm rounded-2xl border border-slate-200 text-center flex flex-col items-center justify-center">
+             <div className="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+             <p className="text-sm text-slate-500">Preparando ambiente...</p>
           </div>
         ) : (
           <div className="bg-white py-6 px-6 shadow-sm rounded-2xl border border-slate-200 flex flex-col gap-6">
